@@ -1,7 +1,12 @@
-package com.salesianostriana.dam.RealStateV2.model;
+package com.salesianostriana.dam.RealStateV2.usuarios.model;
 
+import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
+import com.salesianostriana.dam.RealStateV2.model.Interesa;
+import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -28,6 +33,9 @@ public class Usuario implements UserDetails {
 
     private String direccion;
 
+
+    @NaturalId
+    @Column(unique = true, updatable = false)
     private String email;
 
     private String telefono;
@@ -52,12 +60,12 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override
@@ -79,4 +87,6 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+
 }

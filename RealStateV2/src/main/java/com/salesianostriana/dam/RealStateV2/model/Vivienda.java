@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.RealStateV2.model;
 
+import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,7 +43,7 @@ public class Vivienda implements Serializable {
     private boolean tieneGaraje;
 
     @ManyToOne
-    @JoinColumn(name = "inmobliaria", foreignKey = @ForeignKey(name = "FK_VIVIENDA_INMOBILIARIA"))
+    @JoinColumn(name = "inmobiliaria", foreignKey = @ForeignKey(name = "FK_VIVIENDAINMOBILIARIA"))
     private Inmobiliaria inmobiliaria;
 
     @ManyToOne

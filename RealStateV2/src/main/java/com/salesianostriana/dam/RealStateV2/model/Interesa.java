@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.RealStateV2.model;
 
+import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
