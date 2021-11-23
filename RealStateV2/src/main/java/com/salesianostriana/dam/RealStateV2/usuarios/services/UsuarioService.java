@@ -2,9 +2,10 @@ package com.salesianostriana.dam.RealStateV2.usuarios.services;
 
 
 
-import com.salesianostriana.dam.RealStateV2.security.dto.LoginDto;
+import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
 import com.salesianostriana.dam.RealStateV2.services.base.BaseService;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioDto;
+import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import com.salesianostriana.dam.RealStateV2.usuarios.repos.UsuarioRepository;
@@ -14,8 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.management.relation.Role;
 
 @Service("usuarioDetailsService")
 @RequiredArgsConstructor
@@ -32,23 +31,40 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
 
     public Usuario savePropietario(CreateUsuarioDto nuevoUsuario) {
         if (nuevoUsuario.getPassword().contentEquals(nuevoUsuario.getPassword2())) {
-            Usuario userEntity = Usuario.builder()
+            Usuario usuario = Usuario.builder()
                     .password(passwordEncoder.encode(nuevoUsuario.getPassword()))
                     .avatar(nuevoUsuario.getAvatar())
                     .nombre(nuevoUsuario.getNombre())
                     .apellidos(nuevoUsuario.getApellidos())
                     .email(nuevoUsuario.getEmail())
-                    .telefono((nuevoUsuario.getTelefono()))
+                    .telefono(nuevoUsuario.getTelefono())
+                    .direccion(nuevoUsuario.getDireccion())
                     .rol(Rol.PROPIETARIO)//PREGUNTAR QUE ROL DEBEMOS DE PONER
                     .build();
-            return save(userEntity);
+            return save(usuario);
         } else {
             return null;
         }
     }
 
 
-
+    public Usuario saveGestor(CreateUsuarioGestorDto nuevoGestor){
+        if (nuevoGestor.getPassword().contentEquals(nuevoGestor.getPassword2())) {
+            Usuario usuario = Usuario.builder()
+                    .password(passwordEncoder.encode(nuevoGestor.getPassword()))
+                    .avatar(nuevoGestor.getAvatar())
+                    .nombre(nuevoGestor.getNombre())
+                    .apellidos(nuevoGestor.getApellidos())
+                    .email(nuevoGestor.getEmail())
+                    .telefono(nuevoGestor.getTelefono())
+                    .inmobiliaria(nuevoGestor.getInmobiliaria())
+                    .rol(Rol.GESTOR)//PREGUNTAR QUE ROL DEBEMOS DE PONER
+                    .build();
+            return save(usuario);
+        } else {
+            return null;
+        }
+    }
 
 
 

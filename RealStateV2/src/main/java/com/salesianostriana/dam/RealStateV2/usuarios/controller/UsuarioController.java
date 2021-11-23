@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.RealStateV2.usuarios.controller;
 
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioDto;
+import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.GetUsuarioDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.UsuarioDtoConverter;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
@@ -28,6 +29,22 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioDtoConverter.convertUsuarioToGetUsuarioDto(saved));
 
     }
+
+    @PostMapping("/auth/register/gestor")
+    public ResponseEntity<GetUsuarioDto> nuevoUsuarioGestor(@RequestBody CreateUsuarioGestorDto usuarioGestorDto) {
+        Usuario saved = usuarioService.saveGestor(usuarioGestorDto);
+
+        if (saved == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.ok(usuarioDtoConverter.convertUsuarioToGetUsuarioDto(saved));
+
+    }
+    
+
+
+
+
 
 
 

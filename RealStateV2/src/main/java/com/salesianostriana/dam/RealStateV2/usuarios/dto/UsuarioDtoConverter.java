@@ -14,16 +14,12 @@ public class UsuarioDtoConverter {
                 .apellidos(usuario.getApellidos())
                 .email(usuario.getEmail())
                 .telefono(usuario.getTelefono())
+                .direccion(usuario.getDireccion())
                 .role(usuario.getRol().name())
                 .build();
     }
 
-    public LoginDto convertUsuarioToLoginDto(Usuario usuario){
-        return LoginDto.builder()
-                .email(usuario.getEmail())
-                .password(usuario.getPassword())
-                .build();
-    }
+
 
 
 }
