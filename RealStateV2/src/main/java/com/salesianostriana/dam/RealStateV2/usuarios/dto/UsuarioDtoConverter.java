@@ -12,9 +12,10 @@ public class UsuarioDtoConverter {
                 .nombre(usuario.getNombre())
                 .apellidos(usuario.getApellidos())
                 .email(usuario.getEmail())
+                .telefono(usuario.getTelefono())
                 .role(usuario.getRol().name())
                 .build();
-
-
     }
+
+
 }

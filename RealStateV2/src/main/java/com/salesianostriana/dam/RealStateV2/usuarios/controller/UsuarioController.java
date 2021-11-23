@@ -18,9 +18,9 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final UsuarioDtoConverter usuarioDtoConverter;
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@RequestBody CreateUsuarioDto nuevoUsuario) {
-        Usuario saved = usuarioService.save(nuevoUsuario);
+    @PostMapping("/auth/register/user")
+        public ResponseEntity<GetUsuarioDto> nuevoUsuario(@RequestBody CreateUsuarioDto usuarioPropietario) {
+        Usuario saved = usuarioService.savePropietario(usuarioPropietario);
 
         if (saved == null)
             return ResponseEntity.badRequest().build();
@@ -28,4 +28,7 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioDtoConverter.convertUsuarioEntityToGetUsuarioDto(saved));
 
     }
+
+
+
 }
