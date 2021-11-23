@@ -12,8 +12,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
-basededatos.mv.db
-basededatos.trace.db
+./db/**
 
 ### IntelliJ IDEA ###
 .idea
