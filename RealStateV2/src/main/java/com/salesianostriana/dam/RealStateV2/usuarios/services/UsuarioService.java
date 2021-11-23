@@ -29,7 +29,7 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
     }
 
 
-    public Usuario save(CreateUsuarioDto newUser) {
+    public Usuario savePropietario(CreateUsuarioDto newUser) {
         if (newUser.getPassword().contentEquals(newUser.getPassword2())) {
             Usuario userEntity = Usuario.builder()
                     .password(passwordEncoder.encode(newUser.getPassword()))
@@ -37,13 +37,16 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
                     .nombre(newUser.getNombre())
                     .apellidos(newUser.getApellidos())
                     .email(newUser.getEmail())
-                    .rol(Rol.ADMIN)//PREGUNTAR QUE ROL DEBEMOS DE PONER
+                    .rol(Rol.PROPIETARIO)//PREGUNTAR QUE ROL DEBEMOS DE PONER
                     .build();
             return save(userEntity);
         } else {
             return null;
         }
     }
+
+
+
 
 
 }
