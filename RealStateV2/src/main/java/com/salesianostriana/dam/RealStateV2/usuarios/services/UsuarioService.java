@@ -98,5 +98,8 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
         return this.repositorio.findByRol(rol);
     }
 
+    public Optional<Usuario> loadUserById(Long id) throws UsernameNotFoundException{
+        return this.repositorio.findById(id);
+    }
 
 }
