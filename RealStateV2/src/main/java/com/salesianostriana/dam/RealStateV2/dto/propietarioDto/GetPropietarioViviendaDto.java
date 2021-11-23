@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.RealStateV2.dto.propietarioDto;
 
 import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.GetViviendaDto;
+import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,6 @@ public class GetPropietarioViviendaDto {
     private String telefono;
     private String avatar;
     private List<GetViviendaDto> viviendas;
-    private int numViviendas;
+    private Rol rol;
+
 }

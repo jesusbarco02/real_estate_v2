@@ -20,6 +20,7 @@ public class PropietarioDtoConverter {
                         ,v.getProvincia(),
                         v.getNumBanios(), v.getNumHabitaciones(),v.getMetrosCuadrados(),v.getPrecio()
                         ,v.getDescripcion(),v.getAvatar())).toList())
+                .rol(p.getRol())
                 .build();
     }
     public GetPropietarioDto propietarioToGetPropietarioDto (Usuario p) {
