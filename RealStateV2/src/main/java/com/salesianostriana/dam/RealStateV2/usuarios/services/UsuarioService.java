@@ -2,6 +2,7 @@ package com.salesianostriana.dam.RealStateV2.usuarios.services;
 
 
 
+import com.salesianostriana.dam.RealStateV2.security.dto.LoginDto;
 import com.salesianostriana.dam.RealStateV2.services.base.BaseService;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
@@ -29,14 +30,15 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
     }
 
 
-    public Usuario savePropietario(CreateUsuarioDto newUser) {
-        if (newUser.getPassword().contentEquals(newUser.getPassword2())) {
+    public Usuario savePropietario(CreateUsuarioDto nuevoUsuario) {
+        if (nuevoUsuario.getPassword().contentEquals(nuevoUsuario.getPassword2())) {
             Usuario userEntity = Usuario.builder()
-                    .password(passwordEncoder.encode(newUser.getPassword()))
-                    .avatar(newUser.getAvatar())
-                    .nombre(newUser.getNombre())
-                    .apellidos(newUser.getApellidos())
-                    .email(newUser.getEmail())
+                    .password(passwordEncoder.encode(nuevoUsuario.getPassword()))
+                    .avatar(nuevoUsuario.getAvatar())
+                    .nombre(nuevoUsuario.getNombre())
+                    .apellidos(nuevoUsuario.getApellidos())
+                    .email(nuevoUsuario.getEmail())
+                    .telefono((nuevoUsuario.getTelefono()))
                     .rol(Rol.PROPIETARIO)//PREGUNTAR QUE ROL DEBEMOS DE PONER
                     .build();
             return save(userEntity);
@@ -44,6 +46,8 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
             return null;
         }
     }
+
+
 
 
 
