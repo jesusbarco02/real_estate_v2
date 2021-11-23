@@ -58,6 +58,16 @@ public class Usuario implements UserDetails {
     @JoinColumn(name = "inmobiliaria", foreignKey = @ForeignKey(name = "FK_VIVIENDA_INMOBILIARIA"))
     private Inmobiliaria inmobiliaria;
 
+    public void addInmobiliaria(Inmobiliaria i) {
+        this.inmobiliaria = i;
+        i.getUsuarios().add(this);
+    }
+
+    public void removeInmobiliaria(Inmobiliaria i) {
+        i.getUsuarios().remove(this);
+        this.inmobiliaria = null;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));
