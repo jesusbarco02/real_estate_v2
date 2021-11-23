@@ -16,6 +16,6 @@ public class GetUsuarioDto {
     private String telefono;
     private String role;
     private String direccion;
-
+    private String inmobiliaria;
 
 }

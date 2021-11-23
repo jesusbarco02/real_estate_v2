@@ -3,6 +3,7 @@ package com.salesianostriana.dam.RealStateV2.usuarios.services;
 
 
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
+import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
 import com.salesianostriana.dam.RealStateV2.services.base.BaseService;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
@@ -16,11 +17,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service("usuarioDetailsService")
 @RequiredArgsConstructor
 public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository> implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
+    private final InmobiliariaService inmobiliariaService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -57,8 +62,31 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
                     .apellidos(nuevoGestor.getApellidos())
                     .email(nuevoGestor.getEmail())
                     .telefono(nuevoGestor.getTelefono())
-                    .inmobiliaria(nuevoGestor.getInmobiliaria())
+                    .inmobiliaria(null)
+                    .direccion(nuevoGestor.getDireccion())
                     .rol(Rol.GESTOR)//PREGUNTAR QUE ROL DEBEMOS DE PONER
+                    .build();
+
+            Optional <Inmobiliaria> inmobiliaria= inmobiliariaService.findById(nuevoGestor.getInmobiliaria());
+            usuario.addInmobiliaria(inmobiliaria.get());
+            //Inmobiliaria inmo = inmobiliaria.get();
+            return save(usuario);
+        } else {
+            return null;
+        }
+    }
+
+    public Usuario saveAdmin(CreateUsuarioDto nuevoAdmin){
+        if (nuevoAdmin.getPassword().contentEquals(nuevoAdmin.getPassword2())) {
+            Usuario usuario = Usuario.builder()
+                    .password(passwordEncoder.encode(nuevoAdmin.getPassword()))
+                    .avatar(nuevoAdmin.getAvatar())
+                    .nombre(nuevoAdmin.getNombre())
+                    .apellidos(nuevoAdmin.getApellidos())
+                    .email(nuevoAdmin.getEmail())
+                    .telefono(nuevoAdmin.getTelefono())
+                    .direccion(nuevoAdmin.getDireccion())
+                    .rol(Rol.ADMIN)//PREGUNTAR QUE ROL DEBEMOS DE PONER
                     .build();
             return save(usuario);
         } else {
@@ -66,7 +94,9 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
         }
     }
 
-
+    public List<Usuario> loadUserByRole(Rol rol) throws UsernameNotFoundException{
+        return this.repositorio.findByRol(rol);
+    }
 
 
 }
