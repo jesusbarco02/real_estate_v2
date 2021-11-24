@@ -1,12 +1,10 @@
 package com.salesianostriana.dam.RealStateV2.controller;
 
 import com.salesianostriana.dam.RealStateV2.dto.propietarioDto.GetPropietarioViviendaDto;
-import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.CreateViviendaDto;
-import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.GetViviendaDto;
-import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.GetViviendaPropietarioDto;
-import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.ViviendaDtoConverter;
+import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.*;
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
 import com.salesianostriana.dam.RealStateV2.model.Vivienda;
+import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
 import com.salesianostriana.dam.RealStateV2.services.ViviendaService;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
@@ -36,7 +34,7 @@ public class ViviendaController {
     private final ViviendaService viviendaService;
     private final ViviendaDtoConverter viviendaDtoConverter;
     private final UsuarioService usuarioService;
-
+    private final InmobiliariaService inmobiliariaService;
     @Operation(summary = "Obtiene lista de viviendas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
@@ -100,6 +98,38 @@ public class ViviendaController {
                 .body(converter);
 
     }*/
+
+    @Operation(summary = "Crea una nueva vivienda y añade una inmobiliaria ya existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha creado la nueva vivienda",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha creado la nueva vivienda",
+                    content = @Content),
+    })
+    @PostMapping("{id}/inmobiliaria/{id2}")
+    public ResponseEntity<GetViviendaInmobiliariaDto> createViviendaInmobiliaria (@PathVariable Long id, @PathVariable Long id2, @AuthenticationPrincipal Usuario user){
+        Optional<Vivienda> vivienda = viviendaService.findById(id);
+        Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id2);
+        Inmobiliaria inmobiliaria1 = inmobiliaria.get();
+        Vivienda vivienda1 = vivienda.get();
+        if (vivienda.isEmpty()) {
+            return  ResponseEntity.notFound().build();
+        }else if (user.getRol().equals(Rol.ADMIN) || (user.getRol().equals(Rol.PROPIETARIO) && vivienda.get().getUsuario().getId().equals(user.getId())))  {
+            vivienda1.setInmobiliaria(inmobiliaria1);
+            viviendaService.save(vivienda1);
+            GetViviendaInmobiliariaDto getViviendaDto = viviendaDtoConverter.viviendaToGetViviendaInmobiliariaDto(vivienda1);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(getViviendaDto);
+        }else {
+            return ResponseEntity.status(403).build();
+        }
+
+    }
+
     @Operation(summary = "Se elimina el propietario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
