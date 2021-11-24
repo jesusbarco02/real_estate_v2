@@ -14,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,17 +38,13 @@ public class ViviendaController {
             @ApiResponse(responseCode = "400",
                     description = "No se han encontrado las viviendas",
                     content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra autorizado para realizar dicha petición",
+                    content = @Content),
     })
     @GetMapping("")
     public ResponseEntity<List<GetViviendaDto>> findAll(HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
-
         List<GetViviendaDto> data = viviendaService.listarViviendasDto();
-/*
-        if (data.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(viviendaService.listarViviendasDto());
-        }*/
         if (data.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else if (user.getRol().equals(Rol.PROPIETARIO)){
@@ -55,6 +53,8 @@ public class ViviendaController {
             return ResponseEntity.status(403).build();
         }
     }
+
+
 
 
 
