@@ -15,6 +15,7 @@ public class PropietarioDtoConverter {
                 .apellidos(p.getApellidos())
                 .direccion(p.getDireccion())
                 .email(p.getEmail())
+                .avatar(p.getAvatar())
                 .telefono(p.getTelefono())
                 .viviendas(p.getListaViviendas().stream().map(v -> new GetViviendaDto(v.getId(),v.getTitulo()
                         ,v.getProvincia(),

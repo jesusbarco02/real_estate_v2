@@ -38,10 +38,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 Long usuarioId = jwtProvider.getUserIdFromJwt(token);
 
-                Optional<Usuario> userEntity = usuarioService.findById(usuarioId);
+                Optional<Usuario> usu = usuarioService.findById(usuarioId);
 
-                if (userEntity.isPresent()) {
-                    Usuario usuario = userEntity.get();
+                if (usu.isPresent()) {
+                    Usuario usuario = usu.get();
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
                                     usuario,

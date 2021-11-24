@@ -54,6 +54,8 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
 
 
     public Usuario saveGestor(CreateUsuarioGestorDto nuevoGestor){
+        Optional <Inmobiliaria> inmobiliaria= inmobiliariaService.findById(nuevoGestor.getInmobiliaria());
+        Inmobiliaria inmo = inmobiliaria.get();
         if (nuevoGestor.getPassword().contentEquals(nuevoGestor.getPassword2())) {
             Usuario usuario = Usuario.builder()
                     .password(passwordEncoder.encode(nuevoGestor.getPassword()))
@@ -62,14 +64,12 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
                     .apellidos(nuevoGestor.getApellidos())
                     .email(nuevoGestor.getEmail())
                     .telefono(nuevoGestor.getTelefono())
-                    .inmobiliaria(null)
+                    .inmobiliaria(inmo)
                     .direccion(nuevoGestor.getDireccion())
                     .rol(Rol.GESTOR)//PREGUNTAR QUE ROL DEBEMOS DE PONER
                     .build();
 
-            Optional <Inmobiliaria> inmobiliaria= inmobiliariaService.findById(nuevoGestor.getInmobiliaria());
             usuario.addInmobiliaria(inmobiliaria.get());
-            //Inmobiliaria inmo = inmobiliaria.get();
             return save(usuario);
         } else {
             return null;

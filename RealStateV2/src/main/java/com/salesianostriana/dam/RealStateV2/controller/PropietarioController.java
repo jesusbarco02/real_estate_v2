@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,21 +57,46 @@ public class PropietarioController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<List<GetPropietarioViviendaDto>> findOnePropietario(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<List<GetPropietarioViviendaDto>> findOnePropietario(@PathVariable Long id, HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
         Optional<Usuario> propietario = usuarioService.loadUserById(id);
-
-        String token = jwtAuthorizationFilter.getJwtFromRequest(request);
-        Long idPropietario = jwtProvider.getUserIdFromJwt(token);
-
-        if(propietario.get().getRol().equals(Rol.ADMIN) || propietario.get().getRol().equals(Rol.PROPIETARIO)){
+        if (propietario.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else if (user.getRol().equals(Rol.ADMIN) || propietario.get().getRol().equals(user.getRol()) && propietario.get().getId().equals(user.getId())) {
             List<GetPropietarioViviendaDto> propietarioDto = propietario.stream()
                     .map(propietarioDtoConverter::propietarioToGetPropietarioViviendaDto)
                     .collect(Collectors.toList());
             return ResponseEntity.ok().body(propietarioDto);
         }else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(403).build();
         }
-        //return ResponseEntity.of(userEntityService.findById(id).map(userDtoConverter::propietarioToGetPropietarioConViviendas));
+    }
+
+
+    @Operation(summary = "Se elimina el propietario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha borrado el propietario",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha borrado el propietario",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No tienes autorización",
+                    content = @Content),
+    })
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletePropietario(@PathVariable Long id, HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
+
+        Optional<Usuario> propietario = usuarioService.loadUserById(id);
+        if (propietario.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else if (user.getRol().equals(Rol.ADMIN) || propietario.get().getRol().equals(user.getRol()) && propietario.get().getId().equals(user.getId())) {
+            usuarioService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
 
