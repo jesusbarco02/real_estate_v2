@@ -5,11 +5,14 @@ import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.GetInmobiliariaD
 import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.GetInmobiliariaViviendaDto;
 import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.InmobiliariaDtoConverter;
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
+import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
+import com.salesianostriana.dam.RealStateV2.services.ViviendaService;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class InmobiliariaController {
 
     private final InmobiliariaService inmobiliariaService;
     private final InmobiliariaDtoConverter inmobiliariaDtoConverter;
+    private final ViviendaService viviendaService;
 
     @Operation(summary = "Muestra una lista de todas las inmobiliarias")
     @ApiResponses(value = {
@@ -102,7 +106,31 @@ public class InmobiliariaController {
                             .collect(Collectors.toList());
             return ResponseEntity.ok().body(result);
         }
+    }
 
+
+    @Operation(summary = "Borra una inmobiliaria en base a su ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha borrado la inmobiliaria",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Inmobiliaria.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha borrado la inmobiliaria",
+                    content = @Content),
+    })
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteInmobiliaria(@PathVariable Long id) {
+        Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id);
+        Inmobiliaria inmobiliaria1 = inmobiliaria.get();
+
+        if (inmobiliaria.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            inmobiliaria1.preRemove();
+            inmobiliariaService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
 
     }
 

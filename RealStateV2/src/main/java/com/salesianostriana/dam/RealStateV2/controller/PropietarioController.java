@@ -91,7 +91,7 @@ public class PropietarioController {
         Optional<Usuario> propietario = usuarioService.loadUserById(id);
         if (propietario.isEmpty()){
             return ResponseEntity.notFound().build();
-        }else if (user.getRol().equals(Rol.ADMIN) || propietario.get().getRol().equals(user.getRol()) && propietario.get().getId().equals(user.getId())) {
+        }else if (user.getRol().equals(Rol.ADMIN) || (propietario.get().getRol().equals(user.getRol()) && propietario.get().getId().equals(user.getId()))) {
             usuarioService.deleteById(id);
             return ResponseEntity.noContent().build();
         }else {
