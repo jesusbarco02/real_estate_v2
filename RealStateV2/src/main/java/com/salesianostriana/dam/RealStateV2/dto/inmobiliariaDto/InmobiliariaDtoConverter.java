@@ -17,4 +17,15 @@ public class InmobiliariaDtoConverter {
                 .build();
 
     }
+
+    public Inmobiliaria createInmpbiliariaDtoToInmobiliaria (CreateInmobiliariaDto i){
+        return new Inmobiliaria(
+                i.getNombre(),
+                i.getEmail(),
+                i.getTelefono()
+        );
+
+
+
+    }
 }
