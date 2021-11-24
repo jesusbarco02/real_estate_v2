@@ -2,6 +2,7 @@ package com.salesianostriana.dam.RealStateV2.controller;
 
 import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.CreateInmobiliariaDto;
 import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.GetInmobiliariaDto;
+import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.GetInmobiliariaViviendaDto;
 import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.InmobiliariaDtoConverter;
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
 import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
@@ -18,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -74,6 +76,33 @@ public class InmobiliariaController {
         }else {
             return ResponseEntity.status(403).build();
         }
+
+    }
+
+    @Operation(summary = "Muestra una inmobiliaria y sus viviendas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado la inmobiliaria",
+                    content = { @Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha encontrado la inmobiliaria",
+                    content = @Content),
+    })
+    @GetMapping("{id}")
+    public ResponseEntity<List<GetInmobiliariaViviendaDto>> findOne(@PathVariable Long id){
+
+        Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id);
+
+        if (inmobiliaria.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else{
+            List<GetInmobiliariaViviendaDto> result =
+                    inmobiliaria.stream()
+                            .map(inmobiliariaDtoConverter::inmobiliariaToGetInmobiliariaViviendaDto)
+                            .collect(Collectors.toList());
+            return ResponseEntity.ok().body(result);
+        }
+
 
     }
 
