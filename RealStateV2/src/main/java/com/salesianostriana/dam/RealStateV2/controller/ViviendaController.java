@@ -1,6 +1,9 @@
 package com.salesianostriana.dam.RealStateV2.controller;
 
+import com.salesianostriana.dam.RealStateV2.dto.propietarioDto.GetPropietarioViviendaDto;
 import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.GetViviendaDto;
+import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.GetViviendaPropietarioDto;
+import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.ViviendaDtoConverter;
 import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import com.salesianostriana.dam.RealStateV2.services.ViviendaService;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ import java.util.Optional;
 public class ViviendaController {
 
     private final ViviendaService viviendaService;
+    private final ViviendaDtoConverter viviendaDtoConverter;
 
     @Operation(summary = "Obtiene lista de viviendas")
     @ApiResponses(value = {
@@ -47,13 +52,26 @@ public class ViviendaController {
         List<GetViviendaDto> data = viviendaService.listarViviendasDto();
         if (data.isEmpty()) {
             return ResponseEntity.notFound().build();
-        } else if (user.getRol().equals(Rol.PROPIETARIO)){
+        } else{
             return ResponseEntity.ok(viviendaService.listarViviendasDto());
-        }else {
-            return ResponseEntity.status(403).build();
         }
     }
 
+
+
+    @GetMapping("{id}")
+    public ResponseEntity<List<GetViviendaPropietarioDto>> findOnePropietario(@PathVariable Long id) {
+        Optional<Vivienda> data = viviendaService.findById(id);
+
+        if (data.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            List<GetViviendaPropietarioDto> viviendaDto = data
+                    .stream().map(viviendaDtoConverter :: viviendaToGetViviendaPropietarioDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(viviendaDto);
+        }
+    }
 
 
 

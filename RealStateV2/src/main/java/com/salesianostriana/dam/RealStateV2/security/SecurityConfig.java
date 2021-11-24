@@ -56,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/propietario/").anonymous()
                 .antMatchers(HttpMethod.GET, "/propietario/{id}").hasAnyRole("ADMIN","PROPIETARIO")
                 .antMatchers(HttpMethod.DELETE, "/propietario/{id}").hasAnyRole("ADMIN","PROPIETARIO")
-                .antMatchers(HttpMethod.GET, "/vivienda/").hasRole("PROPIETARIO")
+                .antMatchers(HttpMethod.GET, "/vivienda/").authenticated()
+                .antMatchers(HttpMethod.GET, "/inmobiliaria/").authenticated()
 
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
