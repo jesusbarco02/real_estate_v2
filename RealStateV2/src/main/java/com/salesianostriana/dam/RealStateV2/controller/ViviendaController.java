@@ -1,10 +1,15 @@
 package com.salesianostriana.dam.RealStateV2.controller;
 
+import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.CreateInteresadoInteresaDto;
+import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.GetInteresadoInteresaDto;
+import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.InteresadoDtoConverter;
 import com.salesianostriana.dam.RealStateV2.dto.propietarioDto.GetPropietarioViviendaDto;
 import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.*;
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
+import com.salesianostriana.dam.RealStateV2.model.Interesa;
 import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
+import com.salesianostriana.dam.RealStateV2.services.InteresaService;
 import com.salesianostriana.dam.RealStateV2.services.ViviendaService;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
@@ -35,6 +40,9 @@ public class ViviendaController {
     private final ViviendaDtoConverter viviendaDtoConverter;
     private final UsuarioService usuarioService;
     private final InmobiliariaService inmobiliariaService;
+    private final InteresadoDtoConverter interesadoDtoConverter;
+    private final InteresaService interesaService;
+
     @Operation(summary = "Obtiene lista de viviendas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
@@ -186,5 +194,45 @@ public class ViviendaController {
             return ResponseEntity.status(403).build();
         }
     }
+
+
+    @Operation(summary = "Crea un interesado, y a la vez añade un interesado por una vivienda ya creada")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha creado el nuevo interesado con interés",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encuentra la vivienda",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha podido crear el interesado o hay datos erróneos",
+                    content = @Content)
+    })
+    @PostMapping("{id}/meinteresa")
+    public ResponseEntity<GetInteresadoInteresaDto> create(@PathVariable("id") Long id, @RequestBody CreateInteresadoInteresaDto dto,
+                                                           @AuthenticationPrincipal Usuario user){
+
+        if (viviendaService.findById(id).isEmpty()){
+            return  ResponseEntity.notFound().build();
+        }else if (user.getRol().equals(Rol.PROPIETARIO)){
+            Optional<Vivienda> v = viviendaService.findById(id);
+            Usuario interesado = interesadoDtoConverter.createInteresadoDtoToInteresado(dto);
+            Interesa interesa = Interesa.builder()
+                    .mensaje(dto.getMensaje())
+                    .build();
+            interesa.addToUsuario(interesado);
+            interesa.addToVivienda(v.get());
+            usuarioService.save(interesado);
+            interesaService.save(interesa);
+            GetInteresadoInteresaDto interesadoInteresaDto = interesadoDtoConverter.
+                    interesadoToGetInteresadoInteresaDto(interesado, interesa);
+            return ResponseEntity.status(HttpStatus.CREATED).body(interesadoInteresaDto);
+        }else {
+            return ResponseEntity.status(403).build();
+        }
+
+    }
+
 
 }

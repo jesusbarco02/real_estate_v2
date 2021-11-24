@@ -2,7 +2,10 @@ package com.salesianostriana.dam.RealStateV2.controller;
 
 
 import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.GetInteresadoDto;
+import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.GetInteresadoViviendaDto;
 import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.InteresadoDtoConverter;
+import com.salesianostriana.dam.RealStateV2.model.Interesa;
+import com.salesianostriana.dam.RealStateV2.services.InteresaService;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import com.salesianostriana.dam.RealStateV2.usuarios.services.UsuarioService;
@@ -15,10 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
 public class InteresadoController {
 
     private final UsuarioService usuarioService;
+    private final InteresaService interesaService;
     private final InteresadoDtoConverter interesadoDtoConverter;
 
     @Operation(summary = "Obtiene todos los interesados")
@@ -45,7 +51,7 @@ public class InteresadoController {
     @GetMapping("")
     public ResponseEntity<List<GetInteresadoDto>> findAll(@AuthenticationPrincipal Usuario user){
 
-        List<Usuario> data = usuarioService.findAll();
+        List<Interesa> data = interesaService.findAll();
 
         if (data.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -58,7 +64,32 @@ public class InteresadoController {
         }else {
             return ResponseEntity.status(403).build();
         }
+    }
 
+    @Operation(summary = "Obtiene el interesado que le indicamos por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha encontrado el interesado especificado",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha encontrado el interesado",
+                    content = @Content),
+    })
+    @GetMapping("{id}")
+    public ResponseEntity<List<GetInteresadoViviendaDto>> findOne(@PathVariable Long id, @AuthenticationPrincipal Usuario user){
+        Optional<Usuario> data = usuarioService.findById(id);
+
+        if (data.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else if(user.getRol().equals(Rol.ADMIN) || (data.equals(user.getId()) )) {
+            List<GetInteresadoViviendaDto> interesadoDto = data
+                    .stream().map(interesadoDtoConverter :: interesadoToGetInteresadoViviendaDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(interesadoDto);
+        }else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
 }

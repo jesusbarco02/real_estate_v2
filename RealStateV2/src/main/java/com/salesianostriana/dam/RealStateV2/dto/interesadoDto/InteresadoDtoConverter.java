@@ -1,21 +1,66 @@
 package com.salesianostriana.dam.RealStateV2.dto.interesadoDto;
 
+import com.salesianostriana.dam.RealStateV2.model.Interesa;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import org.springframework.stereotype.Component;
 
 @Component
 public class InteresadoDtoConverter {
 
-    public GetInteresadoDto interesadoToGetInteresadoDto(Usuario i){
+    public GetInteresadoDto interesadoToGetInteresadoDto(Interesa i){
         return GetInteresadoDto
                 .builder()
                 .id(i.getId())
-                .nombre(i.getNombre())
-                .apellidos(i.getApellidos())
-                .direccion(i.getDireccion())
-                .email(i.getEmail())
-                .telefono(i.getTelefono())
-                .avatar(i.getAvatar())
+                .mensaje(i.getMensaje())
+                .nombreUsuario(i.getUsuario().getNombre())
+                .apellidosUsuario(i.getUsuario().getApellidos())
+                .rolUsuario(i.getUsuario().getRol())
+
                 .build();
+    }
+
+    public GetInteresadoViviendaDto interesadoToGetInteresadoViviendaDto (Usuario interesado){
+
+
+
+        return GetInteresadoViviendaDto
+                .builder()
+                .id(interesado.getId())
+                .nombre(interesado.getNombre())
+                .apellidos(interesado.getApellidos())
+                .email(interesado.getEmail())
+                .telefono(interesado.getTelefono())
+                .direccion(interesado.getDireccion())
+                .vivienda(interesado.getInteresas().stream().map(v -> new GetInteresaDto(v.getMensaje(),v.getCreatedDate(),v.getVivienda().getTitulo(),
+                        v.getVivienda().getProvincia(),v.getVivienda().getNumBanios(),
+                        v.getVivienda().getNumHabitaciones(),v.getVivienda().getPrecio(),
+                        v.getVivienda().getDescripcion(),v.getVivienda().getAvatar())).toList())
+                .build();
+    }
+    public Usuario createInteresadoDtoToInteresado(CreateInteresadoInteresaDto i){
+        return new Usuario(
+                i.getNombre(),
+                i.getApellidos(),
+                i.getDireccion(),
+                i.getEmail(),
+                i.getTelefono(),
+                i.getAvatar()
+        );
+    }
+
+    public GetInteresadoInteresaDto interesadoToGetInteresadoInteresaDto(Usuario interesado, Interesa interesa){
+
+        return GetInteresadoInteresaDto
+                .builder()
+                .id(interesado.getId())
+                .nombre(interesado.getNombre())
+                .apellidos(interesado.getApellidos())
+                .direccion(interesado.getDireccion())
+                .email(interesado.getEmail())
+                .telefono(interesado.getTelefono())
+                .avatar(interesado.getAvatar())
+                .mensaje(interesa.getMensaje())
+                .build();
+
     }
 }

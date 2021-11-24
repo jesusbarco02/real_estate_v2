@@ -98,5 +98,12 @@ public class Usuario implements UserDetails {
         return true;
     }
 
-
+    public Usuario(String nombre, String apellidos, String direccion, String email, String telefono, String avatar) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.direccion = direccion;
+        this.email = email;
+        this.telefono = telefono;
+        this.avatar = avatar;
+    }
 }

@@ -131,7 +131,8 @@ public class InmobiliariaController {
             inmobiliariaService.deleteById(id);
             return ResponseEntity.noContent().build();
         }
-
     }
+
+
 
 }
