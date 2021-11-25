@@ -3,10 +3,12 @@ package com.salesianostriana.dam.RealStateV2.usuarios.services;
 
 
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
+import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
 import com.salesianostriana.dam.RealStateV2.services.base.BaseService;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
+import com.salesianostriana.dam.RealStateV2.usuarios.dto.GetUsuarioDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import com.salesianostriana.dam.RealStateV2.usuarios.repos.UsuarioRepository;
@@ -101,5 +103,9 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
     public Optional<Usuario> loadUserById(Long id) throws UsernameNotFoundException{
         return this.repositorio.findById(id);
     }
+
+    /*public List<GetUsuarioDto> loadUserBy() throws UsernameNotFoundException {
+        return this.repositorio.inmobiliariaGestor();
+    }*/
 
 }

@@ -17,7 +17,6 @@ public class GetInteresadoDto {
     private String mensaje;
     private String nombreUsuario;
     private String apellidosUsuario;
-    private Rol rolUsuario;
 
 
 }

@@ -1,11 +1,18 @@
 package com.salesianostriana.dam.RealStateV2.dto.viviendaDto;
 
 
+import com.salesianostriana.dam.RealStateV2.dto.inmobiliariaDto.InmobiliariaDtoConverter;
+import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.InteresadoDtoConverter;
+import com.salesianostriana.dam.RealStateV2.dto.propietarioDto.PropietarioDtoConverter;
 import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ViviendaDtoConverter {
+
+    private final InmobiliariaDtoConverter inmobiliariaDtoConverter= new InmobiliariaDtoConverter();
+    private final PropietarioDtoConverter propietarioDtoConverter = new PropietarioDtoConverter();
+    private final InteresadoDtoConverter interesadoDtoConverter = new InteresadoDtoConverter();
 
     public GetViviendaPropietarioDto viviendaToGetViviendaPropietarioDto (Vivienda v) {
 
@@ -70,4 +77,5 @@ public class ViviendaDtoConverter {
                 .propietarioId(v.getPropietarioId())
                 .build();
     }
+
 }

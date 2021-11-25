@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @Builder
-public class Inmobiliaria implements Serializable {
+public class    Inmobiliaria implements Serializable {
 
     @Id
     @GeneratedValue

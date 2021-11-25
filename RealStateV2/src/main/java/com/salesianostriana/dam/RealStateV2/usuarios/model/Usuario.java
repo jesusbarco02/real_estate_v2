@@ -51,7 +51,7 @@ public class Usuario implements UserDetails {
     private List<Vivienda> listaViviendas = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private List<Interesa> interesas = new ArrayList<>();
 
     @ManyToOne

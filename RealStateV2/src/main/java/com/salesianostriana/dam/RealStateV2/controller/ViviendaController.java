@@ -90,21 +90,6 @@ public class ViviendaController {
         }
     }
 
-    /*@PostMapping("")
-    public ResponseEntity<GetViviendaPropietarioDto> create(@RequestBody CreateViviendaDto dto) {
-
-        if (dto.getPropietarioId() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        CreateViviendaDto nueva = viviendaDtoConverter.createViviendaDtoToVivienda(dto);
-        Usuario propietario = usuarioService.findById(dto.getPropietarioId()).orElse(null);
-        GetViviendaPropietarioDto converter = viviendaDtoConverter.viviendaToGetViviendaPropietarioDto(nueva);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(converter);
-
-    }*/
 
     @Operation(summary = "Crea una nueva vivienda y añade una inmobiliaria ya existente")
     @ApiResponses(value = {
@@ -192,6 +177,21 @@ public class ViviendaController {
         }else {
             return ResponseEntity.status(403).build();
         }
+    }
+
+
+    @PostMapping("/vivienda/")
+    public ResponseEntity<?> createVivienda(@RequestBody Vivienda vivienda, @AuthenticationPrincipal Usuario usuario) {
+        Vivienda vivienda1 = viviendaService.save(vivienda);
+        if(!usuario.getRol().equals(Rol.PROPIETARIO)){
+            return new ResponseEntity<Vivienda>(HttpStatus.UNAUTHORIZED);
+
+        }else {
+            vivienda.addUsuario(usuario);
+            viviendaService.save(vivienda1);
+        }
+        return ResponseEntity.ok(viviendaDtoConverter.viviendaToGetViviendaPropietarioDto(vivienda1));
+
     }
 
 

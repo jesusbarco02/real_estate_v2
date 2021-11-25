@@ -60,7 +60,7 @@ public class InteresaController {
                             .collect(Collectors.toList());
             return ResponseEntity.ok().body(result);
         }else {
-            return ResponseEntity.status(403).build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -80,13 +80,14 @@ public class InteresaController {
 
         if (data.isEmpty()) {
             return ResponseEntity.notFound().build();
-        } else if(user.getRol().equals(Rol.ADMIN) || (data.equals(user.getId()) )) {
+        } else if(data.get().getRol().equals(user.getRol()) &&
+                data.get().getId().equals(user.getId())) {
             List<GetInteresadoViviendaDto> interesadoDto = data
                     .stream().map(interesadoDtoConverter :: interesadoToGetInteresadoViviendaDto)
                     .collect(Collectors.toList());
             return ResponseEntity.ok().body(interesadoDto);
         }else {
-            return ResponseEntity.status(403).build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -113,40 +114,38 @@ public class InteresaController {
             return  ResponseEntity.notFound().build();
         }else if (user.getRol().equals(Rol.PROPIETARIO)){
             Optional<Vivienda> v = viviendaService.findById(id);
-            Usuario interesado = interesadoDtoConverter.createInteresadoDtoToInteresado(dto);
             Interesa interesa = Interesa.builder()
                     .mensaje(dto.getMensaje())
                     .build();
-            interesa.addToUsuario(interesado);
+            interesa.addToUsuario(user);
             interesa.addToVivienda(v.get());
-            usuarioService.save(interesado);
             interesaService.save(interesa);
             GetInteresadoInteresaDto interesadoInteresaDto = interesadoDtoConverter.
-                    interesadoToGetInteresadoInteresaDto(interesado, interesa);
+                    interesadoToGetInteresadoInteresaDto(user, interesa);
             return ResponseEntity.status(HttpStatus.CREATED).body(interesadoInteresaDto);
         }else {
             return ResponseEntity.status(403).build();
         }
     }
 
-    @DeleteMapping("/vivienda/{id}/meinteresa")
+    /*@DeleteMapping("/vivienda/{id}/meinteresa")
     public ResponseEntity<?> deleteInmobiliaria (@PathVariable Long id, @AuthenticationPrincipal Usuario user){
         Optional <Vivienda> vivienda = viviendaService.findById(id);
-
         if (vivienda.isEmpty()) {
             return ResponseEntity.noContent().build();
-        }  else if (user.getRol().equals(Rol.ADMIN) || (user.getRol().equals(Rol.PROPIETARIO) && vivienda.get().getInteresas().equals(user.getId()))) {
-            vivienda.map(v -> {
-                v.setInteresas(null);
-                viviendaService.save(v);
+        }  else if (user.getRol().equals(Rol.ADMIN) || (user.getRol().equals(Rol.PROPIETARIO) && vivienda.get().getInteresas().stream().map(v -> GetInteresaIdDto
+                .builder()
+                .usuarioId(v.getUsuario().getId())
+                .build()
+        ).equals(user.getId()))) {
+
                 return ResponseEntity.noContent().build();
 
-            });
-            return ResponseEntity.noContent().build();
         }else {
             return ResponseEntity.status(403).build();
         }
-    }
+    }*/
+
 
 
 

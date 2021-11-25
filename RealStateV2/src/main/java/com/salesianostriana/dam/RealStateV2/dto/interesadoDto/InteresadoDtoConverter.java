@@ -14,10 +14,10 @@ public class InteresadoDtoConverter {
                 .mensaje(i.getMensaje())
                 .nombreUsuario(i.getUsuario().getNombre())
                 .apellidosUsuario(i.getUsuario().getApellidos())
-                .rolUsuario(i.getUsuario().getRol())
-
                 .build();
     }
+
+
 
     public GetInteresadoViviendaDto interesadoToGetInteresadoViviendaDto (Usuario interesado){
 
@@ -37,16 +37,9 @@ public class InteresadoDtoConverter {
                         v.getVivienda().getDescripcion(),v.getVivienda().getAvatar())).toList())
                 .build();
     }
-    public Usuario createInteresadoDtoToInteresado(CreateInteresadoInteresaDto i){
-        return new Usuario(
-                i.getNombre(),
-                i.getApellidos(),
-                i.getDireccion(),
-                i.getEmail(),
-                i.getTelefono(),
-                i.getAvatar()
-        );
-    }
+
+
+
 
     public GetInteresadoInteresaDto interesadoToGetInteresadoInteresaDto(Usuario interesado, Interesa interesa){
 
@@ -61,6 +54,9 @@ public class InteresadoDtoConverter {
                 .avatar(interesado.getAvatar())
                 .mensaje(interesa.getMensaje())
                 .build();
-
     }
+
+
+
+
 }

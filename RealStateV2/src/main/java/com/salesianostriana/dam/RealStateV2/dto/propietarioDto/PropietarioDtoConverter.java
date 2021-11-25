@@ -37,4 +37,6 @@ public class PropietarioDtoConverter {
                 .numViviendas(numVivienda)
                 .build();
     }
+
+
 }
