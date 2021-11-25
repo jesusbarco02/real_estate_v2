@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/vivienda/")
 public class ViviendaController {
 
     private final ViviendaService viviendaService;
@@ -56,7 +55,7 @@ public class ViviendaController {
                     description = "No se encuentra autorizado para realizar dicha petición",
                     content = @Content),
     })
-    @GetMapping("")
+    @GetMapping("/vivienda/")
     public ResponseEntity<List<GetViviendaDto>> findAll(HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
         List<GetViviendaDto> data = viviendaService.listarViviendasDto();
         if (data.isEmpty()) {
@@ -77,7 +76,7 @@ public class ViviendaController {
                     description = "No se han encontrado la vivienda indicada por ID",
                     content = @Content)
     })
-    @GetMapping("{id}")
+    @GetMapping("/vivienda/{id}")
     public ResponseEntity<List<GetViviendaPropietarioDto>> findOnePropietario(@PathVariable Long id) {
         Optional<Vivienda> data = viviendaService.findById(id);
 
@@ -117,7 +116,7 @@ public class ViviendaController {
                     description = "No se ha creado la nueva vivienda",
                     content = @Content),
     })
-    @PostMapping("{id}/inmobiliaria/{id2}")
+    @PostMapping("/vivienda/{id}/inmobiliaria/{id2}")
     public ResponseEntity<GetViviendaInmobiliariaDto> createViviendaInmobiliaria (@PathVariable Long id, @PathVariable Long id2, @AuthenticationPrincipal Usuario user){
         Optional<Vivienda> vivienda = viviendaService.findById(id);
         Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id2);
@@ -151,7 +150,7 @@ public class ViviendaController {
                     description = "No tienes autorización",
                     content = @Content),
     })
-    @DeleteMapping("{id}")
+    @DeleteMapping("/vivienda/{id}")
     public ResponseEntity<?> deletePropietario(@PathVariable Long id, HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
 
         Optional<Vivienda> vivienda = viviendaService.loadUserById(id);
@@ -175,7 +174,7 @@ public class ViviendaController {
                     description = "No se ha borrado la inmobiliaria",
                     content = @Content),
     })
-    @DeleteMapping("{id}/inmobiliaria")
+    @DeleteMapping("/vivienda/{id}/inmobiliaria")
     public ResponseEntity<?> deleteInmobiliaria (@PathVariable Long id, @AuthenticationPrincipal Usuario user){
         Optional <Vivienda> vivienda = viviendaService.findById(id);
 
@@ -196,43 +195,7 @@ public class ViviendaController {
     }
 
 
-    @Operation(summary = "Crea un interesado, y a la vez añade un interesado por una vivienda ya creada")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Se ha creado el nuevo interesado con interés",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Usuario.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "No se encuentra la vivienda",
-                    content = @Content),
-            @ApiResponse(responseCode = "400",
-                    description = "No se ha podido crear el interesado o hay datos erróneos",
-                    content = @Content)
-    })
-    @PostMapping("{id}/meinteresa")
-    public ResponseEntity<GetInteresadoInteresaDto> create(@PathVariable("id") Long id, @RequestBody CreateInteresadoInteresaDto dto,
-                                                           @AuthenticationPrincipal Usuario user){
 
-        if (viviendaService.findById(id).isEmpty()){
-            return  ResponseEntity.notFound().build();
-        }else if (user.getRol().equals(Rol.PROPIETARIO)){
-            Optional<Vivienda> v = viviendaService.findById(id);
-            Usuario interesado = interesadoDtoConverter.createInteresadoDtoToInteresado(dto);
-            Interesa interesa = Interesa.builder()
-                    .mensaje(dto.getMensaje())
-                    .build();
-            interesa.addToUsuario(interesado);
-            interesa.addToVivienda(v.get());
-            usuarioService.save(interesado);
-            interesaService.save(interesa);
-            GetInteresadoInteresaDto interesadoInteresaDto = interesadoDtoConverter.
-                    interesadoToGetInteresadoInteresaDto(interesado, interesa);
-            return ResponseEntity.status(HttpStatus.CREATED).body(interesadoInteresaDto);
-        }else {
-            return ResponseEntity.status(403).build();
-        }
-
-    }
 
 
 }
