@@ -45,6 +45,9 @@ public class InmobiliariaController {
             @ApiResponse(responseCode = "400",
                     description = "No se han encontrado las inmobiliarias",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
     })
     @GetMapping("")
     public ResponseEntity<List<GetInmobiliariaDto>> findAll() {
@@ -76,16 +79,12 @@ public class InmobiliariaController {
     public ResponseEntity<Inmobiliaria> create(@RequestBody CreateInmobiliariaDto dto, @AuthenticationPrincipal Usuario user){
         if (dto.getNombre().isEmpty()){
             return ResponseEntity.notFound().build();
-        }else if (user.getRol().equals(Rol.ADMIN)) {
+        }else {
 
             Inmobiliaria nueva = inmobiliariaDtoConverter.createInmpbiliariaDtoToInmobiliaria(dto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(inmobiliariaService.save(nueva));
-
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
     }
 
     @Operation(summary = "Muestra una inmobiliaria y sus viviendas")
@@ -95,6 +94,9 @@ public class InmobiliariaController {
                     content = { @Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "400",
                     description = "No se ha encontrado la inmobiliaria",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
                     content = @Content),
     })
     @GetMapping("{id}")
@@ -123,6 +125,9 @@ public class InmobiliariaController {
             @ApiResponse(responseCode = "404",
                     description = "No se ha borrado la inmobiliaria",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
     })
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteInmobiliaria(@PathVariable Long id) {
@@ -139,31 +144,44 @@ public class InmobiliariaController {
     }
 
 
-
+    @Operation(summary = "Crea un nuevo gestor en una inmobiliaria")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha creado el gestor",
+                    content = { @Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha creado el gestor",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
+                    content = @Content),
+    })
     @PostMapping("/{id}/gestor")
     public ResponseEntity<GetInmobiliariaGestorDto> createGestor(@RequestBody CreateGestorDto dtoGestor , @PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
-        Optional<Inmobiliaria> inmobiliariaOptional = inmobiliariaService.findById(id);
-        if(inmobiliariaOptional.isEmpty()){
+        Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id);
+        if(inmobiliaria.isEmpty()){
             return ResponseEntity.notFound().build();
         }else if (usuario.getRol().equals(Rol.ADMIN) ||
-                ((usuario.getRol().equals(Rol.GESTOR) && (inmobiliariaOptional.get().getId().equals(usuario.getInmobiliaria().getId()))))) {
-            Inmobiliaria inmobiliaria = inmobiliariaOptional.get();
+                ((usuario.getRol().equals(Rol.GESTOR) && (inmobiliaria.get().getId().equals(usuario.getInmobiliaria().getId()))))) {
+            Inmobiliaria inmobiliariaId = inmobiliaria.get();
             Usuario gestor = Usuario.builder()
                     .id(dtoGestor.getIdGestor())
                     .build();
-            Optional<Usuario> usuariodataOptional= usuarioService.findById(dtoGestor.getIdGestor());
-            Usuario usuarioData = usuariodataOptional.get();
-            usuarioData.addInmobiliaria(inmobiliaria);
+            Optional<Usuario> usuarioId= usuarioService.findById(dtoGestor.getIdGestor());
+            Usuario usuarioData = usuarioId.get();
+            usuarioData.addInmobiliaria(inmobiliariaId);
             usuarioService.save(usuarioData);
-            inmobiliariaService.save(inmobiliaria);
-            GetInmobiliariaGestorDto iDto = inmobiliariaDtoConverter.inmobiliariaToGetInmobiliariaViviendasDtoPost(gestor,inmobiliaria);
+            inmobiliariaService.save(inmobiliariaId);
+            GetInmobiliariaGestorDto iDto = inmobiliariaDtoConverter.inmobiliariaToGetInmobiliariaViviendasDtoPost(gestor,inmobiliariaId);
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(iDto);
-
         }else{
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(403).build();
         }
     }
 

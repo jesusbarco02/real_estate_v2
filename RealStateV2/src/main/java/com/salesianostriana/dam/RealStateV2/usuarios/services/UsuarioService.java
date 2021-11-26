@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,6 +105,13 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
         return this.repositorio.findById(id);
     }
 
-
+    @PostConstruct
+    public List<Usuario> findAll(){
+        repositorio.findAll().stream().forEach(u -> {
+            u.setPassword(passwordEncoder.encode(u.getPassword()));
+            repositorio.save(u);
+        });
+        return repositorio.findAll();
+    }
 
 }

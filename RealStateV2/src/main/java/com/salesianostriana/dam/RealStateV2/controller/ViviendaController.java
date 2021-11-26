@@ -44,6 +44,9 @@ public class ViviendaController {
             @ApiResponse(responseCode = "400",
                     description = "No se han encontrado las viviendas",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra logueado",
+                    content = @Content),
     })
     @GetMapping("/vivienda/")
     public ResponseEntity<List<GetViviendaDto>> findAll(HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
@@ -64,7 +67,10 @@ public class ViviendaController {
                             schema = @Schema(implementation = Vivienda.class))}),
             @ApiResponse(responseCode = "400",
                     description = "No se han encontrado la vivienda indicada por ID",
-                    content = @Content)
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra logueado",
+                    content = @Content),
     })
     @GetMapping("/vivienda/{id}")
     public ResponseEntity<List<GetViviendaPropietarioDto>> findOnePropietario(@PathVariable Long id) {
@@ -93,6 +99,9 @@ public class ViviendaController {
             @ApiResponse(responseCode = "401",
                     description = "No se encuentra autorizado",
                     content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
+                    content = @Content),
     })
     @PostMapping("/vivienda/{id}/inmobiliaria/{id2}")
     public ResponseEntity<GetViviendaInmobiliariaDto> createViviendaInmobiliaria (@PathVariable Long id, @PathVariable Long id2, @AuthenticationPrincipal Usuario user){
@@ -110,7 +119,7 @@ public class ViviendaController {
                     .status(HttpStatus.CREATED)
                     .body(getViviendaDto);
         }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(403).build();
         }
 
     }
@@ -131,6 +140,9 @@ public class ViviendaController {
             @ApiResponse(responseCode = "401",
                     description = "No se encuentra autorizado",
                     content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
+                    content = @Content),
     })
     @PostMapping("/vivienda/")
     public ResponseEntity<GetViviendaPropietarioDto> create(@RequestBody CreateViviendaDto dto, @AuthenticationPrincipal Usuario user) {
@@ -146,9 +158,9 @@ public class ViviendaController {
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(converter);
+        }else {
+            return ResponseEntity.status(403).build();
         }
-
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -163,6 +175,9 @@ public class ViviendaController {
                     content = @Content),
             @ApiResponse(responseCode = "401",
                     description = "No se encuentra autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
                     content = @Content),
     })
     @PutMapping("/vivienda/{id}")
@@ -196,8 +211,10 @@ public class ViviendaController {
                         return viviendaDtoConverter.editViviendaDtoToVivienda(m);
                     })
             );
+        }else {
+            return ResponseEntity.status(403).build();
+
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     }
     @Operation(summary = "Se elimina la vivienda")
@@ -210,7 +227,10 @@ public class ViviendaController {
                     description = "No se ha borrado la vivienda",
                     content = @Content),
             @ApiResponse(responseCode = "401",
-                    description = "No tienes autorización",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
                     content = @Content),
     })
     @DeleteMapping("/vivienda/{id}")
@@ -223,7 +243,7 @@ public class ViviendaController {
             viviendaService.deleteById(id);
             return ResponseEntity.noContent().build();
         }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(403).build();
         }
     }
 
@@ -237,7 +257,10 @@ public class ViviendaController {
                     description = "No se ha borrado la inmobiliaria",
                     content = @Content),
             @ApiResponse(responseCode = "401",
-                    description = "No se encuentra autorizado",
+                    description = "No se encuentra logueado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
                     content = @Content),
     })
     @DeleteMapping("/vivienda/{id}/inmobiliaria")
@@ -256,7 +279,7 @@ public class ViviendaController {
             });
             return ResponseEntity.noContent().build();
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(403).build();
         }
     }
 

@@ -44,6 +44,9 @@ public class PropietarioController {
            @ApiResponse(responseCode = "400",
                    description = "No se han encontrado los propietarios",
                    content = @Content),
+           @ApiResponse(responseCode = "401",
+                   description = "No se encuentra autorizado",
+                   content = @Content),
    })
    @GetMapping("")
    public ResponseEntity<List<GetPropietarioDto>> findAll(){
@@ -66,8 +69,11 @@ public class PropietarioController {
             @ApiResponse(responseCode = "400",
                     description = "No se ha encontrado el propietario",
                     content = @Content),
-            @ApiResponse(responseCode = "403",
+            @ApiResponse(responseCode = "401",
                     description = "No se encuentra autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
                     content = @Content),
     })
    @GetMapping("{id}")
@@ -97,8 +103,11 @@ public class PropietarioController {
            @ApiResponse(responseCode = "404",
                    description = "No se ha borrado el propietario",
                    content = @Content),
+           @ApiResponse(responseCode = "401",
+                   description = "No se encuentra autorizado",
+                   content = @Content),
            @ApiResponse(responseCode = "403",
-                   description = "No tienes autorización",
+                   description = "No se encuentra los permisos para realizar la petición",
                    content = @Content),
    })
    @DeleteMapping("{id}")

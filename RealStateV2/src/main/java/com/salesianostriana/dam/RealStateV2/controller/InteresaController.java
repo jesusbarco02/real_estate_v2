@@ -43,7 +43,7 @@ public class InteresaController {
                     description = "No se han listado los interesados",
                     content = @Content),
             @ApiResponse(responseCode = "401",
-                    description = "No tienes autorización",
+                    description = "No se encuentra autorizado",
                     content = @Content),
     })
     @GetMapping("/interesado/")
@@ -53,14 +53,12 @@ public class InteresaController {
 
         if (data.isEmpty()){
             return ResponseEntity.notFound().build();
-        }else if(user.getRol().equals(Rol.ADMIN)){
+        }else{
             List<GetInteresadoDto> result =
                     data.stream()
                             .map(interesadoDtoConverter::interesadoToGetInteresadoDto)
                             .collect(Collectors.toList());
             return ResponseEntity.ok().body(result);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -76,6 +74,9 @@ public class InteresaController {
             @ApiResponse(responseCode = "401",
                     description = "No se encuentra autorizado",
                     content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
+                    content = @Content),
     })
     @GetMapping("/interesado/{id}")
     public ResponseEntity<List<GetInteresadoViviendaDto>> findOne(@PathVariable Long id, @AuthenticationPrincipal Usuario user){
@@ -90,7 +91,7 @@ public class InteresaController {
                     .collect(Collectors.toList());
             return ResponseEntity.ok().body(interesadoDto);
         }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(403).build();
         }
     }
 
@@ -111,6 +112,9 @@ public class InteresaController {
             @ApiResponse(responseCode = "401",
                     description = "No se encuentra autorizado",
                     content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra los permisos para realizar la petición",
+                    content = @Content),
     })
     @PostMapping("/vivienda/{id}/meinteresa")
     public ResponseEntity<GetInteresadoInteresaDto> create(@PathVariable("id") Long id, @RequestBody CreateInteresadoInteresaDto dto,
@@ -130,7 +134,7 @@ public class InteresaController {
                     interesadoToGetInteresadoInteresaDto(user, interesa);
             return ResponseEntity.status(HttpStatus.CREATED).body(interesadoInteresaDto);
         }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(403).build();
         }
     }
 
