@@ -1,17 +1,11 @@
 package com.salesianostriana.dam.RealStateV2.controller;
 
-import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.CreateInteresadoInteresaDto;
-import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.GetInteresadoInteresaDto;
-import com.salesianostriana.dam.RealStateV2.dto.interesadoDto.InteresadoDtoConverter;
-import com.salesianostriana.dam.RealStateV2.dto.propietarioDto.GetPropietarioViviendaDto;
+
 import com.salesianostriana.dam.RealStateV2.dto.viviendaDto.*;
 import com.salesianostriana.dam.RealStateV2.model.Inmobiliaria;
-import com.salesianostriana.dam.RealStateV2.model.Interesa;
 import com.salesianostriana.dam.RealStateV2.model.Vivienda;
 import com.salesianostriana.dam.RealStateV2.services.InmobiliariaService;
-import com.salesianostriana.dam.RealStateV2.services.InteresaService;
 import com.salesianostriana.dam.RealStateV2.services.ViviendaService;
-import com.salesianostriana.dam.RealStateV2.usuarios.dto.CreateUsuarioGestorDto;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Rol;
 import com.salesianostriana.dam.RealStateV2.usuarios.model.Usuario;
 import com.salesianostriana.dam.RealStateV2.usuarios.services.UsuarioService;
@@ -39,8 +33,7 @@ public class ViviendaController {
     private final ViviendaDtoConverter viviendaDtoConverter;
     private final UsuarioService usuarioService;
     private final InmobiliariaService inmobiliariaService;
-    private final InteresadoDtoConverter interesadoDtoConverter;
-    private final InteresaService interesaService;
+
 
     @Operation(summary = "Obtiene lista de viviendas")
     @ApiResponses(value = {
@@ -50,9 +43,6 @@ public class ViviendaController {
                             schema = @Schema(implementation = Vivienda.class))}),
             @ApiResponse(responseCode = "400",
                     description = "No se han encontrado las viviendas",
-                    content = @Content),
-            @ApiResponse(responseCode = "403",
-                    description = "No se encuentra autorizado para realizar dicha petición",
                     content = @Content),
     })
     @GetMapping("/vivienda/")
@@ -100,6 +90,9 @@ public class ViviendaController {
             @ApiResponse(responseCode = "400",
                     description = "No se ha creado la nueva vivienda",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
     })
     @PostMapping("/vivienda/{id}/inmobiliaria/{id2}")
     public ResponseEntity<GetViviendaInmobiliariaDto> createViviendaInmobiliaria (@PathVariable Long id, @PathVariable Long id2, @AuthenticationPrincipal Usuario user){
@@ -117,12 +110,97 @@ public class ViviendaController {
                     .status(HttpStatus.CREATED)
                     .body(getViviendaDto);
         }else {
-            return ResponseEntity.status(403).build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
     }
 
-    @Operation(summary = "Se elimina el propietario")
+
+    @Operation(summary = "Crea una nueva vivienda a la que se asocia un  propietario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha creado la nueva vivienda",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha encontrado el propietario",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha creado la nueva vivienda",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
+    })
+    @PostMapping("/vivienda/")
+    public ResponseEntity<GetViviendaPropietarioDto> create(@RequestBody CreateViviendaDto dto, @AuthenticationPrincipal Usuario user) {
+
+        if (dto.getPropietarioId() == null) {
+            return ResponseEntity.badRequest().build();
+        }else if (user.getRol().equals(Rol.PROPIETARIO)){
+            Vivienda nueva = viviendaDtoConverter.createViviendaDtoToVivienda(dto);
+            Usuario propietario = usuarioService.findById(user.getId()).orElse(null);
+            nueva.setUsuario(propietario);
+            viviendaService.save(nueva);
+            GetViviendaPropietarioDto converter = viviendaDtoConverter.viviendaToGetViviendaPropietarioDto(nueva);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(converter);
+        }
+
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @Operation(summary = "Edita una vivienda anteriormente creada, buscando por su ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha editado la vivienda",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha editado la vivienda",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
+    })
+    @PutMapping("/vivienda/{id}")
+    public ResponseEntity<PutViviendaDto> edit (@RequestBody PutViviendaDto v, @PathVariable Long id, @AuthenticationPrincipal Usuario user) {
+        Optional<Vivienda> vivienda= viviendaService.findById(id);
+
+        if (vivienda.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else if(vivienda.get().getUsuario().getId().equals(user.getId())) {
+
+            return ResponseEntity.of(
+                    vivienda.map(m -> {
+                        m.setTitulo(v.getTitulo());
+                        m.setProvincia(v.getProvincia());
+                        m.setTipoVivienda(v.getTipoVivienda());
+                        m.setNumBanios(v.getNumBanios());
+                        m.setNumHabitaciones(v.getNumHabitaciones());
+                        m.setMetrosCuadrados(v.getMetrosCuadrados());
+                        m.setPrecio(v.getPrecio());
+                        m.setDescripcion(v.getDescripcion());
+                        m.setAvatar(v.getAvatar());
+                        m.setDireccion(v.getDireccion());
+                        m.setCodigoPostal(v.getCodigoPostal());
+                        m.setLatlng(v.getLatlng());
+                        m.setPoblacion(v.getPoblacion());
+                        m.setTienePiscina(v.isTienePiscina());
+                        m.setTieneAscensor(v.isTieneAscensor());
+                        m.setTieneGaraje(v.isTieneGaraje());
+                        m.setUsuario(m.getUsuario());
+                        viviendaService.save(m);
+                        return viviendaDtoConverter.editViviendaDtoToVivienda(m);
+                    })
+            );
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+    @Operation(summary = "Se elimina la vivienda")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
                     description = "Se ha borrado la vivienda",
@@ -131,7 +209,7 @@ public class ViviendaController {
             @ApiResponse(responseCode = "404",
                     description = "No se ha borrado la vivienda",
                     content = @Content),
-            @ApiResponse(responseCode = "403",
+            @ApiResponse(responseCode = "401",
                     description = "No tienes autorización",
                     content = @Content),
     })
@@ -145,7 +223,7 @@ public class ViviendaController {
             viviendaService.deleteById(id);
             return ResponseEntity.noContent().build();
         }else {
-            return ResponseEntity.status(403).build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -157,6 +235,9 @@ public class ViviendaController {
                             schema = @Schema(implementation = Vivienda.class))}),
             @ApiResponse(responseCode = "404",
                     description = "No se ha borrado la inmobiliaria",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
                     content = @Content),
     })
     @DeleteMapping("/vivienda/{id}/inmobiliaria")
@@ -174,28 +255,9 @@ public class ViviendaController {
 
             });
             return ResponseEntity.noContent().build();
-        }else {
-            return ResponseEntity.status(403).build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
-
-
-    @PostMapping("/vivienda/")
-    public ResponseEntity<?> createVivienda(@RequestBody Vivienda vivienda, @AuthenticationPrincipal Usuario usuario) {
-        Vivienda vivienda1 = viviendaService.save(vivienda);
-        if(!usuario.getRol().equals(Rol.PROPIETARIO)){
-            return new ResponseEntity<Vivienda>(HttpStatus.UNAUTHORIZED);
-
-        }else {
-            vivienda.addUsuario(usuario);
-            viviendaService.save(vivienda1);
-        }
-        return ResponseEntity.ok(viviendaDtoConverter.viviendaToGetViviendaPropietarioDto(vivienda1));
-
-    }
-
-
-
-
 
 }

@@ -104,8 +104,6 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
         return this.repositorio.findById(id);
     }
 
-    /*public List<GetUsuarioDto> loadUserBy() throws UsernameNotFoundException {
-        return this.repositorio.inmobiliariaGestor();
-    }*/
+
 
 }

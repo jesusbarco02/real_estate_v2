@@ -42,7 +42,7 @@ public class InteresaController {
             @ApiResponse(responseCode = "400",
                     description = "No se han listado los interesados",
                     content = @Content),
-            @ApiResponse(responseCode = "403",
+            @ApiResponse(responseCode = "401",
                     description = "No tienes autorización",
                     content = @Content),
     })
@@ -72,6 +72,9 @@ public class InteresaController {
                             schema = @Schema(implementation = Usuario.class))}),
             @ApiResponse(responseCode = "400",
                     description = "No se ha encontrado el interesado",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
                     content = @Content),
     })
     @GetMapping("/interesado/{id}")
@@ -104,7 +107,10 @@ public class InteresaController {
                     content = @Content),
             @ApiResponse(responseCode = "400",
                     description = "No se ha podido crear el interesado o hay datos erróneos",
-                    content = @Content)
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
     })
     @PostMapping("/vivienda/{id}/meinteresa")
     public ResponseEntity<GetInteresadoInteresaDto> create(@PathVariable("id") Long id, @RequestBody CreateInteresadoInteresaDto dto,
@@ -124,29 +130,8 @@ public class InteresaController {
                     interesadoToGetInteresadoInteresaDto(user, interesa);
             return ResponseEntity.status(HttpStatus.CREATED).body(interesadoInteresaDto);
         }else {
-            return ResponseEntity.status(403).build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
-
-    /*@DeleteMapping("/vivienda/{id}/meinteresa")
-    public ResponseEntity<?> deleteInmobiliaria (@PathVariable Long id, @AuthenticationPrincipal Usuario user){
-        Optional <Vivienda> vivienda = viviendaService.findById(id);
-        if (vivienda.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }  else if (user.getRol().equals(Rol.ADMIN) || (user.getRol().equals(Rol.PROPIETARIO) && vivienda.get().getInteresas().stream().map(v -> GetInteresaIdDto
-                .builder()
-                .usuarioId(v.getUsuario().getId())
-                .build()
-        ).equals(user.getId()))) {
-
-                return ResponseEntity.noContent().build();
-
-        }else {
-            return ResponseEntity.status(403).build();
-        }
-    }*/
-
-
-
 
 }

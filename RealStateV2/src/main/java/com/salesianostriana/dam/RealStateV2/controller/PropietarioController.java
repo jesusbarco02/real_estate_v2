@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,19 @@ public class PropietarioController {
        }
    }
 
+    @Operation(summary = "Obtiene el propietario que le indicamos por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha encontrado el propietaroi especificado",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha encontrado el propietario",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
+    })
    @GetMapping("{id}")
    public ResponseEntity<List<GetPropietarioViviendaDto>> findOnePropietario(@PathVariable Long id,
                                                                              HttpServletRequest request,

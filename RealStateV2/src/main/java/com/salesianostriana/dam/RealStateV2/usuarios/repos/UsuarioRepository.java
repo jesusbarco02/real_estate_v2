@@ -17,14 +17,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findByRol (Rol rol);
     Optional<Usuario> findById(Long id);
 
-
-    /*@Query("""
-            select new com.salesianostriana.dam.RealStateV2.usuarios.dto.GetUsuarioDto(
-                 u.avatar,u.nombre,u.apellidos, u.email,  u.telefono, u.rol,u.direccion
-            )
-            from Usuario u 
-            """)
-    List<GetUsuarioDto> inmobiliariaGestor();*/
-
 }
 

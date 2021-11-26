@@ -35,7 +35,6 @@ public class InmobiliariaController {
 
     private final InmobiliariaService inmobiliariaService;
     private final InmobiliariaDtoConverter inmobiliariaDtoConverter;
-    private final ViviendaService viviendaService;
     private final UsuarioService usuarioService;
 
     @Operation(summary = "Muestra una lista de todas las inmobiliarias")
@@ -69,6 +68,9 @@ public class InmobiliariaController {
             @ApiResponse(responseCode = "400",
                     description = "No se ha creado la inmobiliaria",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra autorizado",
+                    content = @Content),
     })
     @PostMapping("")
     public ResponseEntity<Inmobiliaria> create(@RequestBody CreateInmobiliariaDto dto, @AuthenticationPrincipal Usuario user){
@@ -81,7 +83,7 @@ public class InmobiliariaController {
             return ResponseEntity.status(HttpStatus.CREATED).body(inmobiliariaService.save(nueva));
 
         }else {
-            return ResponseEntity.status(403).build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
     }
@@ -135,15 +137,7 @@ public class InmobiliariaController {
             return ResponseEntity.noContent().build();
         }
     }
-    /*@GetMapping("inmobiliaria/{id}/gestor")
-    public ResponseEntity<List<GetUsuarioDto>> findAllGestores(HttpServletRequest request, @AuthenticationPrincipal Usuario user) {
-        List<GetUsuarioDto> data = usuarioService.loadUserBy();
-        if (data.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(usuarioService.loadUserBy());
-        }
-    }*/
+
 
 
     @PostMapping("/{id}/gestor")

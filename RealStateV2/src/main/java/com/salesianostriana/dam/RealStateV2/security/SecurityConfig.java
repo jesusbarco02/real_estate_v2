@@ -53,13 +53,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/register/gestor").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/auth/register/user").anonymous()
                 .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
+
                 .antMatchers(HttpMethod.GET, "/propietario/").anonymous()
                 .antMatchers(HttpMethod.GET, "/propietario/{id}").hasAnyRole("ADMIN","PROPIETARIO")
                 .antMatchers(HttpMethod.DELETE, "/propietario/{id}").hasAnyRole("ADMIN","PROPIETARIO")
+
                 .antMatchers(HttpMethod.GET, "/vivienda/").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/vivienda/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/vivienda/{id}/inmobiliaria").hasAnyRole("ADMIN","GESTOR","PROPIETARIO")
                 .antMatchers(HttpMethod.POST, "/vivienda/{id}/inmobiliaria/{id}").hasAnyRole("ADMIN","PROPIETARIO")
+                .antMatchers(HttpMethod.POST, "/vivienda/").hasRole("PROPIETARIO")
+                .antMatchers(HttpMethod.PUT, "/vivienda/{id}").hasAnyRole("PROPIETARIO", "ADMIN")
+
                 .antMatchers(HttpMethod.GET, "/inmobiliaria/").authenticated()
                 .antMatchers(HttpMethod.POST, "/inmobiliaria/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/inmobiliaria/{id}").authenticated()
@@ -67,16 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/interesado/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/interesado/{id}").hasAnyRole("ADMIN", "PROPIETARIO")
 
-
-
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-
         // Para dar acceso a h2
         http.headers().frameOptions().disable();
-
 
     }
 
