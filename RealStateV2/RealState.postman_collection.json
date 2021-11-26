@@ -1,0 +1,872 @@
+{
+	"info": {
+		"_postman_id": "20e9ff65-f038-4848-90fe-3b635ecccca6",
+		"name": "RealState",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "usuarios",
+			"item": [
+				{
+					"name": "Nuevo Usuario Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Jesús\",\r\n    \"avatar\": \"https://www.nicepng.com/png/detail/608-6080578_png-file-svg-icono-de-persona-png.png\",\r\n    \"apellidos\": \"Barco Espinar\",\r\n    \"email\":\"admin@gmail.com\",\r\n    \"password\": \"morenito19\",\r\n    \"password2\": \"morenito19\",\r\n    \"telefono\": \"1234567\",\r\n    \"direccion\": \"Condes de Bustillo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register/admin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"tokenAdmin\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"wmcgillacoell0@odnoklassniki.ru\",\r\n    \"password\":\"q7TVirdd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nuevo Usuario Propietario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Jesús\",\r\n    \"avatar\": \"https://www.nicepng.com/png/detail/608-6080578_png-file-svg-icono-de-persona-png.png\",\r\n    \"apellidos\": \"Barco Espinar\",\r\n    \"email\":\"propietario1@gmail.com\",\r\n    \"password\": \"morenito19\",\r\n    \"password2\": \"morenito19\",\r\n    \"telefono\": \"1234567\",\r\n    \"direccion\": \"Condes de Bustillo,10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Propietario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"tokenPropietario\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"propietario@gmail.com\",\r\n    \"password\":\"morenito19\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nuevo Usuario Gestor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Jesús\",\r\n    \"avatar\": \"https://www.nicepng.com/png/detail/608-6080578_png-file-svg-icono-de-persona-png.png\",\r\n    \"apellidos\": \"Barco Espinar\",\r\n    \"email\":\"gestor@gmail.com\",\r\n    \"password\": \"morenito19\",\r\n    \"password2\": \"morenito19\",\r\n    \"telefono\": \"1234567\",\r\n    \"direccion\": \"Condes de Bustillo\",\r\n    \"inmobiliaria\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register/gestor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								"gestor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Gestor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"gestor@gmail.com\",\r\n    \"password\":\"morenito19\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "propietarios",
+			"item": [
+				{
+					"name": "Propietarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/propietario/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"propietario",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Propietario id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc5NTQ2MDcsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.Cq64b1wuLFupVqAQp5m2lmQt8NYMum229r4hRKZVi70",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/propietario/167",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"propietario",
+								"167"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Propietario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjgiLCJpYXQiOjE2Mzc4NDA0NjgsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiR0VTVE9SIn0.yIU9ZjgLibCeA8Z8NhcskTNMrfG6vyDuTC7bN0-YLOM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/propietario/167",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"propietario",
+								"167"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "viviendas",
+			"item": [
+				{
+					"name": "Viviendas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjgiLCJpYXQiOjE2Mzc5MjU0MTUsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.1lgw_9cJZ46IJgYhtXYT-0ZnnOPL53JSspf1aJkSJns",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc4NTU4NzcsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.iNnsCZ4jvHSa8BGixbGJRwGy9kyCU3HgwvE4fNqRAt0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/127",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"127"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc5NzIyNDgsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.I--c95gj2877mcBxjLz3jI2EGl0fWNLNXiCAk508dNc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Casa o chalet en venta en calle Gravina\",\r\n    \"provincia\": \"Sevilla\",\r\n    \"numBanios\": 6,\r\n    \"numHabitaciones\": 4,\r\n    \"metrosCuadrados\": 45.0,\r\n    \"precio\": 648228.0,\r\n    \"descripcion\": \"Viviendas de líneas rectas y modernas, muy luminosas, con un diseño exquisito, donde ha primado el espacio, el confort y el bienestar, pensadas para encajar con el entorno que les rodea. Cada vivienda contará con parcela privada que oscilará (según vivienda) entre los 165,75 m2 y los 340,30 m2, con una superficie construida de 106 m2 construidos, distribuidos en 3 dormitorios, baño, aseo (ducha opcional), salón-comedor, cocina independiente, terraza y porche. Entre las calidades destacamos la pre-instalación de aire acondicionado y de alarma y su eficiencia energética.\",\r\n    \"avatar\": \"https://i.pinimg.com/originals/c5/05/3e/c5053ef961cd25837d37a3b15019cf77.png\",\r\n    \"direccion\": \"Condes de Bustillo\",\r\n    \"latlng\": \"-12121, -12132\",\r\n    \"tipoVivienda\": \"ALQUILER\",\r\n    \"propietarioId\": \"167\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vivienda/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda ID Inmobiliaria ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/127/inmobiliaria/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"127",
+								"inmobiliaria",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjkiLCJpYXQiOjE2Mzc5NzIzMTUsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.7iOUo1Ixh4BISwlSdoU65OlawR-VlTCAWl5BdGq33lg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Piso\",\r\n    \"provincia\": \"Sevilla\",\r\n    \"numBanios\": 6,\r\n    \"numHabitaciones\": 4,\r\n    \"metrosCuadrados\": 45.0,\r\n    \"precio\": 648228.0,\r\n    \"descripcion\": \"Viviendas de líneas rectas y modernas, muy luminosas, con un diseño exquisito, donde ha primado el espacio, el confort y el bienestar, pensadas para encajar con el entorno que les rodea. Cada vivienda contará con parcela privada que oscilará (según vivienda) entre los 165,75 m2 y los 340,30 m2, con una superficie construida de 106 m2 construidos, distribuidos en 3 dormitorios, baño, aseo (ducha opcional), salón-comedor, cocina independiente, terraza y porche. Entre las calidades destacamos la pre-instalación de aire acondicionado y de alarma y su eficiencia energética.\",\r\n    \"avatar\": \"https://i.pinimg.com/originals/c5/05/3e/c5053ef961cd25837d37a3b15019cf77.png\",\r\n    \"direccion\": \"Condes de Bustillo\",\r\n    \"latlng\": \"-12121, -12132\",\r\n    \"tipoVivienda\": \"ALQUILER\",\r\n    \"poblacion\":\"Triana\",\r\n    \"codigoPostal\":\"4110\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vivienda/168",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"168"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc4Nzc0NjcsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.3JKFrphKD6Vgl13VRxkOn7_DInvVd9R9EXA_q7HcRfk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/127",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"127"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda ID Inmobiliaria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjgiLCJpYXQiOjE2Mzc4NzE3OTUsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiR0VTVE9SIn0.uP6VtkOsmqXTofM39gekNKf-Icgp0tXazERrr348BWs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/139/inmobiliaria",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"139",
+								"inmobiliaria"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "inmobiliaria",
+			"item": [
+				{
+					"name": "Inmobiliarias",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc4NjE5OTQsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.y0CzQ1FXE1LtqsZZx72w82WPtNWqsv9plwBGYW_IsZ4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inmobiliaria Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjgiLCJpYXQiOjE2Mzc5NTYxNjQsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.cnUd2dePVyvwdok7kOM8-3ZSRC5IYja7phgqKBEd6L0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nuevo Inmobiliaria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Inmobiliaria triana\",\r\n    \"email\": \"inmobiliaria@gmail.com\",\r\n    \"telefono\":\"654096823\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inmobiliaria Id Gestor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2MzgwMDExNzQsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.-0RiWnvOEgVxrmyFF-16g2aKBYgxzkaaMxTUxtYW2gw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idGestor\": 168\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/2/gestor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"2",
+								"gestor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inmobiliaria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjgiLCJpYXQiOjE2Mzc4NjU2OTgsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.el9rkBmWdD9sTjb6Y4uh4r5Sjjnxqxf0TU1hwHudymo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "interesados",
+			"item": [
+				{
+					"name": "Interesados",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjkiLCJpYXQiOjE2Mzc5NTQzMzksIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.3qvhZgfFyW8CilCxbbUDGexPwCVb8iOOq0gPUCWiJq4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/interesado/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"interesado",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interesado ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjgiLCJpYXQiOjE2Mzc5NTY2NjUsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.vEWuS7pm2Q26LM-_Th4p7LIycUNIqhiaSp8phJbFBzs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/interesado/167",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"interesado",
+								"167"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vivienda ID MeInteresa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc5NTY2MzIsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiUFJPUElFVEFSSU8ifQ.CeFDkR0goxVapY1GDT4NpW7wyz4HMtCfg_JFL-e0-RE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"mensaje\":\"Esta casa esta chula por su jardín\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vivienda/127/meinteresa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"127",
+								"meinteresa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Interesa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjciLCJpYXQiOjE2Mzc5NDE3NTUsIm5vbWJyZSI6Ikplc8O6cyIsImFwZWxsaWRvcyI6IkJhcmNvIEVzcGluYXIiLCJyb2xlIjoiQURNSU4ifQ.Ce2-Myyol4KT0kNX_GCfwMWYD29AG8yiWoUEtZyNPYw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/127/meinteresa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"127",
+								"meinteresa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "tokenAdmin",
+			"value": ""
+		}
+	]
+}
