@@ -47,7 +47,7 @@ public class InteresaController {
                     content = @Content),
     })
     @GetMapping("/interesado/")
-    public ResponseEntity<List<GetInteresadoDto>> findAll(@AuthenticationPrincipal Usuario user){
+    public ResponseEntity<List<GetInteresadoDto>> findAll(@AuthenticationPrincipal Usuario user){ // TODO ¿Para qué sirve el usuario autenticado aquí?
 
         List<Interesa> data = interesaService.findAll();
 
@@ -120,6 +120,7 @@ public class InteresaController {
     public ResponseEntity<GetInteresadoInteresaDto> create(@PathVariable("id") Long id, @RequestBody CreateInteresadoInteresaDto dto,
                                                            @AuthenticationPrincipal Usuario user){
 
+        // TODO Mucha lógica de negocio en un controlador. Debería estar en un servicio.
         if (viviendaService.findById(id).isEmpty()){
             return  ResponseEntity.notFound().build();
         }else if (user.getRol().equals(Rol.PROPIETARIO)){

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JwtUsuarioResponse {
+public class JwtUsuarioResponse { // TODO Este DTO se podría mejorar para que cumpliera las necesidades del proyecto
 
     private String email;
     private String nombre;

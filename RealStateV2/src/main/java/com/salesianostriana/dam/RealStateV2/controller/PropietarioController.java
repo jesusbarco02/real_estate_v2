@@ -78,7 +78,7 @@ public class PropietarioController {
     })
    @GetMapping("{id}")
    public ResponseEntity<List<GetPropietarioViviendaDto>> findOnePropietario(@PathVariable Long id,
-                                                                             HttpServletRequest request,
+                                                                             HttpServletRequest request, // TODO ¿para qué sirve?
                                                                              @AuthenticationPrincipal Usuario user) {
        Optional<Usuario> propietario = usuarioService.loadUserById(id);
        if (propietario.isEmpty()){

@@ -76,6 +76,7 @@ public class InmobiliariaController {
                     content = @Content),
     })
     @PostMapping("")
+    // TODO ¿para qué sirve el usuario autenticado aquí?
     public ResponseEntity<Inmobiliaria> create(@RequestBody CreateInmobiliariaDto dto, @AuthenticationPrincipal Usuario user){
         if (dto.getNombre().isEmpty()){
             return ResponseEntity.notFound().build();
@@ -132,7 +133,7 @@ public class InmobiliariaController {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteInmobiliaria(@PathVariable Long id) {
         Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id);
-        Inmobiliaria inmobiliaria1 = inmobiliaria.get();
+        Inmobiliaria inmobiliaria1 = inmobiliaria.get(); // TODO ¿Y si la inmobiliaria no existe?
 
         if (inmobiliaria.isEmpty()) {
             return ResponseEntity.noContent().build();

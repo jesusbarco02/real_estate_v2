@@ -104,10 +104,11 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/vivienda/{id}/inmobiliaria/{id2}")
+    // TODO Mucha lógica de negocio. Debería ir en un servicio.
     public ResponseEntity<GetViviendaInmobiliariaDto> createViviendaInmobiliaria (@PathVariable Long id, @PathVariable Long id2, @AuthenticationPrincipal Usuario user){
         Optional<Vivienda> vivienda = viviendaService.findById(id);
         Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id2);
-        Inmobiliaria inmobiliaria1 = inmobiliaria.get();
+        Inmobiliaria inmobiliaria1 = inmobiliaria.get(); // TODO Código peligroso
         Vivienda vivienda1 = vivienda.get();
         if (vivienda.isEmpty()) {
             return  ResponseEntity.notFound().build();
