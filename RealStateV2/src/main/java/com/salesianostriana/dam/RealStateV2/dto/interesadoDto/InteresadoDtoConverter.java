@@ -34,7 +34,7 @@ public class InteresadoDtoConverter {
                 .vivienda(interesado.getInteresas().stream().map(v -> new GetInteresaDto(v.getMensaje(),v.getCreatedDate(),v.getVivienda().getTitulo(),
                         v.getVivienda().getProvincia(),v.getVivienda().getNumBanios(),
                         v.getVivienda().getNumHabitaciones(),v.getVivienda().getPrecio(),
-                        v.getVivienda().getDescripcion(),v.getVivienda().getAvatar())).toList())
+                        v.getVivienda().getDescripcion(),v.getVivienda().getAvatar(),v.getVivienda().getInteresas())).toList())
                 .build();
     }
 

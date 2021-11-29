@@ -96,6 +96,21 @@ public class InteresaController {
     }
 
 
+    @GetMapping("/interesado/vivienda")
+    public ResponseEntity<List<GetInteresadoViviendaDto>> viviendasInteresado(@PathVariable Long id, @AuthenticationPrincipal Usuario user){
+        Optional<Usuario> data = usuarioService.findById(user.getId());
+
+        if (data.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            List<GetInteresadoViviendaDto> interesadoDto = data
+                    .stream().map(interesadoDtoConverter :: interesadoToGetInteresadoViviendaDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(interesadoDto);
+        }
+    }
+
+
 
     @Operation(summary = "Crea un interesado, y a la vez añade un interesado por una vivienda ya creada")
     @ApiResponses(value = {

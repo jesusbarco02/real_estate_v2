@@ -21,4 +21,5 @@ public class GetInteresadoViviendaDto {
     private String telefono;
     private List<GetInteresaDto> vivienda;
 
+
 }

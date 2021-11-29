@@ -57,6 +57,28 @@ public class ViviendaController {
             return ResponseEntity.ok(viviendaService.listarViviendasDto());
         }
     }
+    @Operation(summary = "Obtiene lista de viviendas del usuario logueado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado lista de viviendas del usuario logueado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han encontrado las viviendas del usuario logueado",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No se encuentra logueado",
+                    content = @Content),
+    })
+    @GetMapping("/vivienda/propietario")
+    public ResponseEntity<List<GetViviendaDto>> viviendasPropietario(@AuthenticationPrincipal Usuario user) {
+        List<GetViviendaDto> data = viviendaService.listarViviendasPropietario(user.getId());
+        if (data.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(viviendaService.listarViviendasPropietario(user.getId()));
+        }
+    }
 
 
     @Operation(summary = "Obtiene los detalles de una vivienda")
