@@ -32,13 +32,13 @@ public interface ViviendaRepository extends JpaRepository<Vivienda, Long> {
             from Vivienda v where v.usuario.id = :id
             """)
     List<GetViviendaDto> todosLasViviendasPropietario(Long id);
-    @Query("""
+    /*@Query("""
             select new com.salesianostriana.dam.RealStateV2.dto.viviendaDto.GetViviendaInteresaDto(
-                v.id, v.titulo, v.provincia, v.numBanios, v.numHabitaciones, v.metrosCuadrados, v.precio, v.descripcion, v.avatar
+                v.id, v.titulo, v.provincia, v.numBanios, v.numHabitaciones, v.metrosCuadrados, v.precio, v.descripcion, v.avatar, v.interesas
             )
             from Vivienda v where v.usuario.id = :id
             """)
-    List<GetViviendaInteresaDto> todosLasViviendasInteresado(Long id);
+    List<GetViviendaInteresaDto> todosLasViviendasInteresado(Long id);*/
 
 
 
